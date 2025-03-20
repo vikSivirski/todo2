@@ -1,22 +1,33 @@
-import { Component } from "react";
+import { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class TaskFilter extends Component {
-
-	render() {
-		return (
-			<ul className="filters">
-				<li key={crypto.randomUUID()}>
-					<button className="selected">All</button>
-				</li>
-				<li key={crypto.randomUUID()}>
-					<button>Active</button>
-				</li>
-				<li key={crypto.randomUUID()}>
-					<button>Completed</button>
-				</li>
-			</ul>
-		)
-	}
+  render() {
+    const { setFilter } = this.props;
+    return (
+      <ul className="filters">
+        <li key={crypto.randomUUID()}>
+          <button className="selected" onClick={() => setFilter('all')}>
+            All
+          </button>
+        </li>
+        <li key={crypto.randomUUID()}>
+          <button onClick={() => setFilter('active')}>Active</button>
+        </li>
+        <li key={crypto.randomUUID()}>
+          <button onClick={() => setFilter('completed')}>Completed</button>
+        </li>
+      </ul>
+    );
+  }
 }
+
+TaskFilter.propTypes = {
+  setFilter: PropTypes.func.isRequired,
+};
+
+TaskFilter.defaultProps = {
+  setFilter: () => {},
+};
 
 export default TaskFilter;

@@ -1,42 +1,53 @@
-import { Component } from "react";
-import Task from "../Task/Task";
-import "./TaskList.css";
+import { Component } from 'react';
+import { formatDistanceToNow } from 'date-fns';
+import PropTypes from 'prop-types';
+
+import Task from '../Task/Task';
+import './TaskList.css';
 
 class TaskList extends Component {
-	render() {
-		const { todos } = this.props;
-		const elements = todos.map((item) => {
-			console.log(item.id)
-			return <Task
-				classMame={item.classMame}
-				taskDescr={item.taskDescr}
-				id={item.id}
-			/>
-		})
+  render() {
+    const { todos, onTogleDone, onDeleted } = this.props;
 
-		return (
-			<ul className="todo-list">
-				{elements}
-			</ul>
-		)
-	}
+    const elements = todos.map((item) => {
+      const distanceToNow = formatDistanceToNow(item.createdTime, {
+        addSuffix: true,
+        includeSeconds: true,
+      });
+      return (
+        <Task
+          key={item.id}
+          className={item.className}
+          taskDescr={item.taskDescr}
+          onDeleted={() => onDeleted(item.id)}
+          onTogleDone={() => onTogleDone(item.id)}
+          done={item.done}
+          createdTime={distanceToNow}
+          id={item.id}
+        />
+      );
+    });
+
+    return <ul className="todo-list">{elements}</ul>;
+  }
 }
 
-// const TaskList = ({ todos }) => {
-// 	const elements = todos.map((item)=> {
-// 		console.log(item.id)
-// 		return <Task
-// 			classMame={item.classMame}
-// 			taskDescr={item.taskDescr}
-// 			id={item.id}
-// 		/>
-// 	})
+TaskList.propTypes = {
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      taskDescr: PropTypes.string.isRequired,
+      done: PropTypes.bool.isRequired,
+    })
+  ).isRequired,
+  onTogleDone: PropTypes.func.isRequired,
+  onDeleted: PropTypes.func.isRequired,
+};
 
-// 	return(
-// 		<ul className="todo-list">
-// 			{ elements }
-// 		</ul>
-// 	)
-// }
+TaskList.defaultProps = {
+  todos: [],
+  onTogleDone: () => {},
+  onDeleted: () => {},
+};
 
 export default TaskList;
