@@ -13,18 +13,21 @@ class App extends Component {
         taskDescr: 'Completed task',
         createdTime: new Date(),
         id: crypto.randomUUID(),
+        isEditing: false,
       },
       {
         done: false,
         taskDescr: 'Editing task',
         createdTime: new Date(),
         id: crypto.randomUUID(),
+        isEditing: false,
       },
       {
         done: false,
         taskDescr: 'Active task',
         createdTime: new Date(),
         id: crypto.randomUUID(),
+        isEditing: false,
       },
     ],
     filter: 'all',
@@ -36,6 +39,7 @@ class App extends Component {
       taskDescr: text,
       createdTime: new Date(),
       id: crypto.randomUUID(),
+      isEditing: false,
     };
 
     this.setState(({ todoData }) => {
@@ -69,6 +73,31 @@ class App extends Component {
 
       return {
         todoData: newArr,
+      };
+    });
+  };
+
+  onTogleEditing = (id) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = { ...todoData[idx] };
+      const newItem = { ...oldItem, isEditing: !oldItem.isEditing };
+      const newData = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+      return {
+        todoData: newData,
+      };
+    });
+  };
+
+  onUpdateDescription = (id, newDescription) => {
+    this.setState(({ todoData }) => {
+      const idx = todoData.findIndex((el) => el.id === id);
+      const oldItem = { ...todoData[idx] };
+      const newItem = { ...oldItem, taskDescr: newDescription };
+      const newData = [...todoData.slice(0, idx), newItem, ...todoData.slice(idx + 1)];
+
+      return {
+        todoData: newData,
       };
     });
   };
@@ -109,7 +138,13 @@ class App extends Component {
         <section className="todoapp">
           <NewTaskForm onItemAdded={this.onItemAdded} />
           <section className="main">
-            <TaskList todos={this.filterTodos()} onTogleDone={this.onTogleDone} onDeleted={this.onDeleted} />
+            <TaskList
+              todos={this.filterTodos()}
+              onTogleDone={this.onTogleDone}
+              onDeleted={this.onDeleted}
+              onTogleEditing={this.onTogleEditing}
+              onUpdateDescription={this.onUpdateDescription}
+            />
             <Footer setFilter={this.setFilter} clearCompleted={this.clearCompleted} doneCounter={doneCounter} />
           </section>
         </section>

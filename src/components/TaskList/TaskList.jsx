@@ -7,7 +7,7 @@ import './TaskList.css';
 
 class TaskList extends Component {
   render() {
-    const { todos, onTogleDone, onDeleted } = this.props;
+    const { todos, onTogleDone, onDeleted, onTogleEditing, onUpdateDescription } = this.props;
 
     const elements = todos.map((item) => {
       const distanceToNow = formatDistanceToNow(item.createdTime, {
@@ -21,8 +21,11 @@ class TaskList extends Component {
           taskDescr={item.taskDescr}
           onDeleted={() => onDeleted(item.id)}
           onTogleDone={() => onTogleDone(item.id)}
+          onTogleEditing={() => onTogleEditing(item.id)}
+          onUpdateDescription={(newText) => onUpdateDescription(item.id, newText)}
           done={item.done}
           createdTime={distanceToNow}
+          isEditing={item.isEditing}
           id={item.id}
         />
       );

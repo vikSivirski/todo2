@@ -5,18 +5,26 @@ import './Task.css';
 
 class Task extends Component {
   render() {
-    const { taskDescr, id, onDeleted, onTogleDone, done, createdTime } = this.props;
+    const { taskDescr, id, onDeleted, onTogleDone, done, createdTime, isEditing, onTogleEditing, onUpdateDescription } =
+      this.props;
+    const onSubmit = (e) => {
+      e.preventDefault();
+      onTogleEditing();
+    };
     return (
-      <li className={done ? 'completed' : 'active'} key={id}>
+      <li className={`${done ? 'completed' : 'active'} ${isEditing ? 'editing' : ''}`} key={id}>
         <div className="view">
-          <input className="toggle" type="checkbox" onClick={onTogleDone} />
+          <input className="toggle" type="checkbox" onClick={onTogleDone} checked={done} />
           <label>
             <span className="description">{taskDescr}</span>
             <span className="created">created {createdTime}</span>
           </label>
-          <button className="icon icon-edit"></button>
+          <button className="icon icon-edit" onClick={onTogleEditing}></button>
           <button className="icon icon-destroy" onClick={onDeleted}></button>
         </div>
+        <form onSubmit={onSubmit}>
+          <input type="text" className="edit" autoFocus onChange={(e) => onUpdateDescription(e.target.value)} />
+        </form>
       </li>
     );
   }

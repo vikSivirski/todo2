@@ -31,6 +31,7 @@ class NewTaskForm extends Component {
             className="new-todo"
             placeholder="What needs to be done?"
             autoFocus
+            pattern="^[^\s]+(\s.*)?$"
             onChange={this.onLabelChange}
             value={this.state.label}
           />
